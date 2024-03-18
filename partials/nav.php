@@ -38,3 +38,6 @@ require_once(__DIR__ . "/../lib/functions.php");
         <?php endif; ?>
     </ul>
 </nav>
+
+<script src = "helpers.js"></script>
+<link rel = "stylesheet" href = "styles.css"></link>
