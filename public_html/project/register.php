@@ -27,6 +27,7 @@ reset_session();
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
+        //bns24 April 1st, 2024
         var email = document.getElementsByName('email')[0].value;
         var password = document.getElementsByName('password')[0].value;
         var confirm = document.getElementsByName('confirm')[0].value;
@@ -55,6 +56,7 @@ reset_session();
         if(confirm == ""){
             flash("[JS] Confirm password cannot be empty.", "warning");
             return false;
+            //bns24 April 1st 2024
         }
 
         if(password.length < 8){
@@ -79,7 +81,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
     $password = se($_POST, "password", "", false);
     $confirm = se($_POST, "confirm", "", false);
     $username = se($_POST, "username", "", false);
-    //TODO 3
+    //TODO 3 bns24 04/01/24
     $hasError = false;
     if (empty($email)) {
         flash("Email must not be empty", "danger");
@@ -115,7 +117,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
         $hasError = true;
     }
     if (!$hasError) {
-        //TODO 4
+        //TODO 4 bns24 04/01/24
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO Users (email, password, username) VALUES(:email, :password, :username)");

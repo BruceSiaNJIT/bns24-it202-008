@@ -15,7 +15,7 @@ require(__DIR__ . "/../../partials/nav.php");
 <script>
     function validate(form) {
         //TODO 1: implement JavaScript validation
-        //ensure it returns false for an error and true for success
+        //ensure it returns false for an error and true for success bns24 04/01/24
         var email = document.getElementsByName('email')[0].value;
         var password = document.getElementsByName('password')[0].value;
 
@@ -47,7 +47,7 @@ require(__DIR__ . "/../../partials/nav.php");
         }
 
         //TODO update clientside validation to check if it should
-        //valid email or username
+        //valid email or username bns24 04/01/24
         return true;
     }
 </script>
@@ -64,7 +64,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         $hasError = true;
     }
     if (str_contains($email, "@")) {
-        //sanitize
+        //sanitize bns24 04/01/24
         //$email = filter_var($email, FILTER_SANITIZE_EMAIL);
         $email = sanitize_email($email);
         //validate
@@ -92,7 +92,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     }
     if (!$hasError) {
         //flash("Welcome, $email");
-        //TODO 4
+        //TODO 4 bns24 04/01/24
         $db = getDB();
         $stmt = $db->prepare("SELECT id, email, username, password from Users 
         where email = :email or username = :email");
@@ -116,7 +116,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                         if ($roles) {
                             $_SESSION["user"]["roles"] = $roles; //at least 1 role
                         } else {
-                            $_SESSION["user"]["roles"] = []; //no roles
+                            $_SESSION["user"]["roles"] = []; //no roles bns24 04/01/24  
                         }
                         flash("Welcome, " . get_username());
                         die(header("Location: home.php"));
