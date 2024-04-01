@@ -121,6 +121,8 @@ $username = get_username();
 
 <script>
     function validate(form) {
+        let email = form.email.value;
+        let username = form.username.value;
         let pw = form.newPassword.value;
         let con = form.confirmPassword.value;
         let isValid = true;
@@ -128,8 +130,23 @@ $username = get_username();
 
         //example of using flash via javascript
         //find the flash container, create a new element, appendChild
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            flash("[JS] Invalid email format", "warning");
+            isValid = false;
+        }
+
+        if(!/^[a-z0-9_-]{3,16}$/.test(username)){
+            flash("[JS] Username must only contain 3-16 characters a-z, 0-9, _, or -", "warning");
+            isValid = false;
+        }
+
+        if(pw.length < 8){
+            flash("[JS] New password must be atleast 8 characters.", "warning");
+            isValid = false;
+        }
+
         if (pw !== con) {
-            flash("Password and Confrim password must match", "warning");
+            flash("[JS] Password and Confirm password must match", "warning");
             isValid = false;
         }
         return isValid;
