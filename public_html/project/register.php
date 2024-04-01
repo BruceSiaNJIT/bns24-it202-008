@@ -27,6 +27,47 @@ reset_session();
     function validate(form) {
         //TODO 1: implement JavaScript validation
         //ensure it returns false for an error and true for success
+        var email = document.getElementsByName('email')[0].value;
+        var password = document.getElementsByName('password')[0].value;
+        var confirm = document.getElementsByName('confirm')[0].value;
+        var username = document.getElementsByName('username')[0].value;
+
+        if(email == ""){
+            flash("[JS] Email cannot be empty.", "warning");
+            return false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            flash("[JS] Invalid email format", "warning");
+            return false;
+        }
+
+        if(!/^[a-z0-9_-]{3,16}$/.test(username)){
+            flash("[JS] Username must only contain 3-16 characters a-z, 0-9, _, or -", "warning");
+            return false;
+        }
+
+        if(password == ""){
+            flash("[JS] Password cannot be empty.", "warning");
+            return false;
+        }
+
+        if(confirm == ""){
+            flash("[JS] Confirm password cannot be empty.", "warning");
+            return false;
+        }
+
+        if(password.length < 8){
+            flash("[JS] Password must be atleast 8 characters.", "warning");
+            return false;
+        }
+
+        if(confirm !== password){
+            flash("[JS] Password and Confirm Password must match.", "warning");
+            return false;
+        }
+
+
 
         return true;
     }
