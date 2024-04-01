@@ -30,7 +30,7 @@ require(__DIR__ . "/../../partials/nav.php");
                 return false;
             }
         }else{
-            if(!/^[a-z0-9_-]{3,16}$/.test(username)){
+            if(!/^[a-z0-9_-]{3,16}$/.test(email)){
                 flash("[JS] Username must only contain 3-16 characters a-z, 0-9, _, or -", "warning");
                 return false;
             }
