@@ -23,7 +23,7 @@ if (isset($_POST["save"])) {
         $params = [":email" => $email, ":username" => $username, ":id" => get_user_id()];
         $db = getDB();
         $stmt = $db->prepare("UPDATE Users set email = :email, username = :username where id = :id");
-        try {
+        try {   
             $stmt->execute($params);
             flash("Profile saved", "success");
         } catch (Exception $e) {
