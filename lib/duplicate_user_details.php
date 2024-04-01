@@ -8,7 +8,7 @@ function users_check_duplicate($errorInfo)
         if (isset($matches[1])) {
             flash("The chosen " . $matches[1] . " is not available.", "warning");
         } else {
-            //TODO come up with a nice error message
+            //TODO come up with a nice error message bns24 04/01/24
             flash("An unhandled error occured", "danger");
             //this will log the output to the terminal/console that's running the php server
             error_log(var_export($errorInfo, true));
