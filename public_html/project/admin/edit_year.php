@@ -81,8 +81,6 @@ if($yr){
     ];
     $keys = array_keys($yr);
 
-    var_export($keys);
-
     foreach($form as $k=>$v){
         if($v["name"] === "number"){
             $form[$k]["name"] = "year";
@@ -97,6 +95,9 @@ if($yr){
 ?>
 <div class = "container-fluid">
     <h3>Edit Year</h3>
+    <div>
+        <a href = "<?php echo get_url("admin/list_years.php");?>" class = "btn btn-secondary">Back</a>
+    </div>
     <form method="POST">
         <?php foreach($form as $k=>$v){
             render_input($v);
