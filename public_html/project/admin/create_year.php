@@ -16,6 +16,9 @@ if(isset($_POST["action"])){
     if($year){
         if($action === "fetch"){
             $result = fetch_quote($year);
+            if($result){
+                $result["is_api"] = 1;
+            }
         }else if($action === "create"){
             foreach($_POST as $k => $v){
                 if(!in_array($k, ["number", "text", "type"])){
@@ -34,7 +37,7 @@ if(isset($_POST["action"])){
 
     foreach($result as $k => $v){
         //might need to do something like if $k is not equal to found and number
-        if($k == "text" || $k == "number" || $k == "type"){
+        if($k == "text" || $k == "number" || $k == "type" || $k == "is_api"){
             if($k == "number"){
                 $k = "year";
             }
