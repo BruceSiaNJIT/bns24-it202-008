@@ -49,7 +49,6 @@ if(isset($_POST["action"])){
 
     $query .= "(" . join(",", $columns) . ")";
     $query .= "VALUES (" . join(",", array_keys($params)) . ")";
-    var_export($query);
     error_log("Query: " . $query);
     error_log("Params: ". var_export($params, true));
     try{
@@ -57,7 +56,12 @@ if(isset($_POST["action"])){
         $stmt->execute($params);
         flash("Inserted record " . $db->lastInsertId(), "success");
     }catch(PDOException $e){
-        error_log("Something went wrong.");
+        if($e->errorInfo[1] == 1062){
+            flash("Another year has the same description, please use another description.", "warning");
+        }else{
+            error_log("Something went wrong.");
+            flash("An error occurred.", "danger");
+        }
     }
 }
 
@@ -84,7 +88,7 @@ if(isset($_POST["action"])){
         <form method="POST">
             <?php render_input(["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
             <?php render_input(["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
-            <?php render_input(["type" => "text", "name" => "type", "placeholder" => "Type", "label" => "Type", "rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
+            <?php render_input(["type" => "select", "name" => "type", "label" => "Type", "options" => ["year" => "year"],"rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
             <?php render_input(["type" => "hidden", "name" => "action", "value" => "create"]);?>
             <?php render_button(["text" => "Search", "type" => "submit", "text" => "Create"]); ?>
         </form>

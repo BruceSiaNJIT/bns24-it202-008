@@ -107,7 +107,7 @@ catch(PDOException $e){
     flash("Unhandled error occurred", "danger");
 }
 
-$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "edit_url"=>get_url("admin/edit_year.php"), "delete_url"=>get_url("admin/delete_year.php")];
+$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "edit_url"=>get_url("admin/edit_year.php"), "delete_url"=>get_url("admin/delete_year.php"), "view_url"=>get_url("admin/view_year.php")];
 ?>
 
 <div class = "container-fluid">
