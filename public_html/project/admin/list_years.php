@@ -1,5 +1,5 @@
 <?php
-//note we need to go up 1 more directory
+//note we need to go up 1 more directory bns24 04/14/24
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
@@ -7,7 +7,7 @@ if (!has_role("Admin")) {
     die(header("Location: $BASE_PATH" . "/home.php"));
 }
 
-//build search form
+//build search form bns24 04/14/24
 $form = [
     ["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "include_margin" => false],
     ["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "include_margin" => false],
@@ -19,7 +19,7 @@ $form = [
 ];
 
 
-
+//bns24 04/14/24
 $query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -91,7 +91,7 @@ if(count($_GET) > 0){
 
 }
 
-$db = getDB();
+$db = getDB(); //bns24 04/14/24
 $stmt = $db->prepare($query);
 $results = [];
 try{

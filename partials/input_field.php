@@ -31,7 +31,7 @@
         <div class="mb-3">
         <?php endif; ?>
         <?php if ($_label) : ?>
-            <?php /* label field */ ?>
+            <?php /* label field  bns24 04/14/24*/ ?>
             <label class="form-label" for="<?php se($_id); ?>"><?php se($_label); ?></label>
         <?php endif; ?>
 

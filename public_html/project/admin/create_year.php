@@ -1,5 +1,5 @@
 <?php
-//note we need to go up 1 more directory
+//note we need to go up 1 more directory bns24 04/14/24
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
@@ -9,7 +9,7 @@ if (!has_role("Admin")) {
 ?>
 
 <?php
-//handle year fetch
+//handle year fetch bns24 04/14/24
 if(isset($_POST["action"])){
     $action = $_POST["action"];
     $year = se($_POST, "number", "", false);
@@ -51,6 +51,7 @@ if(isset($_POST["action"])){
     $query .= "VALUES (" . join(",", array_keys($params)) . ")";
     error_log("Query: " . $query);
     error_log("Params: ". var_export($params, true));
+    //bns24 04/14/24
     try{
         $stmt = $db->prepare($query);
         $stmt->execute($params);
@@ -86,6 +87,7 @@ if(isset($_POST["action"])){
     </div>
     <div id = "create" style = "display:none;" class = "tab-target">
         <form method="POST">
+            <!-- bns24 04/14/24 -->
             <?php render_input(["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
             <?php render_input(["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>
             <?php render_input(["type" => "select", "name" => "type", "label" => "Type", "options" => ["year" => "year"],"rules" => ["required" => "required"]]);/*lazy value to check if form submitted, not ideal*/ ?>

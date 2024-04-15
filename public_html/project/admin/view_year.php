@@ -13,7 +13,7 @@ $id = se($_GET, "id", -1, false);
 
 $yr = [];
 if ($id > -1) {
-    //fetch
+    //fetch bns24 04/14/24
     $db = getDB();
     $query = "SELECT id, year, text, type, created, modified FROM `Numbers` WHERE id = :id";
     try {
@@ -50,7 +50,7 @@ $table = ["data"=>$data, "edit_url"=>get_url("admin/edit_year.php"), "ignored_co
     <div>
         <a href="<?php echo get_url("admin/list_years.php"); ?>" class="btn btn-secondary">Back</a>
     </div>
-    <!-- https://i.kym-cdn.com/entries/icons/original/000/029/959/Screen_Shot_2019-06-05_at_1.26.32_PM.jpg -->
+    <!-- bns24 04/24/24 -->
     <div class="card mx-auto" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title"><?php se($yr, "year", "Unknown"); ?></h5>
