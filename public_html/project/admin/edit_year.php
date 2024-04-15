@@ -62,7 +62,6 @@ if($id > -1){
         $r = $stmt->fetch();
         if($r){
             $yr = $r;
-            var_export($yr);
         }
     }catch(PDOException $e){
         error_log("Error fetching record: " . var_export($e, true));
@@ -77,7 +76,7 @@ if($yr){
     $form = [
         ["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "rules" => ["required" => "required"]],
-        ["type" => "text", "name" => "type", "placeholder" => "Type", "label" => "Type", "rules" => ["required" => "required"]]
+        ["type" => "select", "name" => "type", "label" => "Type", "options" => ["year" => "year"],"rules" => ["required" => "required"]]
     ];
     $keys = array_keys($yr);
 
