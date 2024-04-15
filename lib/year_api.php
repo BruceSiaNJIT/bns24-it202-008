@@ -1,4 +1,5 @@
 <?php
+//bns24 04/14/24
 
 function fetch_quote($yearnum){
     $result = get("https://numbersapi.p.rapidapi.com/$yearnum/year", "NUMBER_API_KEY", ["fragment" => true, "json" => true]);

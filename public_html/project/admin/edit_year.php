@@ -1,5 +1,6 @@
 <?php
 //note we need to go up 1 more directory
+//bns24 04/14/24
 require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
@@ -44,6 +45,7 @@ if(isset($_POST["year"])){
     error_log("Query: " . $query);
     error_log("Params: ". var_export($params, true));
     try{
+        //bns24 04/14/24
         $stmt = $db->prepare($query);
         $stmt->execute($params);
         flash("Updated record", "success");
@@ -73,6 +75,7 @@ if($id > -1){
 }
 
 if($yr){
+    //bns24 04/14/24
     $form = [
         ["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "rules" => ["required" => "required"]],
