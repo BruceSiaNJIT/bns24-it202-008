@@ -29,5 +29,7 @@ require(__DIR__ . "/api_helper.php");
 
 require(__DIR__ . "/year_api.php");
 
-require(__DIR__ . "/session_store.php")
+require(__DIR__ . "/session_store.php");
+
+require(__DIR__ . "/db_helpers.php") 
 ?>
