@@ -24,7 +24,7 @@ if ($id > -1) {
     }
 } else {
     flash("Invalid id passed", "danger");
-    die(header("Location:" . get_url("admin/list_years.php")));
+    redirect("admin/list_years.php");
 }
 foreach ($yr as $key => $value) {
     if (is_null($value)) {
