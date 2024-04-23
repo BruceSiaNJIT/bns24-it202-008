@@ -24,7 +24,7 @@ $session_data = session_load($session_key);
 if($is_clear){
     session_delete($session_key);
     unset($_GET["clear"]);
-    die(header("Location: " . $session_key));
+    redirect($session_key);
 }else{
     $session_data = session_load($session_key);
 }
