@@ -122,7 +122,7 @@ catch(PDOException $e){
         <?php foreach($results as $yr):?>  
             <?php $testarray = []; ?>
             <?php $testarray[0] = $yr?>
-            <?php $table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];?>
+            <?php $table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
             <div class = "col">
                 <?php render_card($yr, $table, false); ?>
             </div>
