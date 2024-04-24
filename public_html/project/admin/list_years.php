@@ -4,7 +4,7 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
-    die(header("Location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 
 //build search form bns24 04/14/24
@@ -29,7 +29,7 @@ $session_data = session_load($session_key);
 if($is_clear){
     session_delete($session_key);
     unset($_GET["clear"]);
-    die(header("Location: " . $session_key));
+    redirect($session_key);
 }else{
     $session_data = session_load($session_key);
 }

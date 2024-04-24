@@ -15,8 +15,10 @@ $form = [
 
 
 //bns24 04/14/24
-$query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
-$params = [];
+$query = "SELECT n.id, text, year, user_id, type FROM `Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id
+WHERE user_id = :user_id";
+$params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
 $session_data = session_load($session_key);
@@ -107,7 +109,7 @@ catch(PDOException $e){
 ?>
 
 <div class = "container-fluid">
-    <h3>Years</h3>
+    <h3>My Favorites</h3>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>
@@ -123,7 +125,7 @@ catch(PDOException $e){
             <?php $testarray = []; ?>
             <?php $testarray[0] = $yr?>
             <?php //$table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
-            <?php $table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];?>
+            <?php $table = ["data"=>$testarray, "ignored_columns" => ["user_id", "id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];?>
             <div class = "col">
                 <?php render_card($yr, $table, false); ?>
             </div>
