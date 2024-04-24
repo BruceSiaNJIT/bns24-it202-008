@@ -42,6 +42,7 @@ session_start();
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a></li>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('user_list_years.php'); ?>">See Years</a></li>
+                    <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('my_favorites.php'); ?>">My Favorites</a></li>
                 <?php endif; ?>
                 <?php if (!is_logged_in()) : ?>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
