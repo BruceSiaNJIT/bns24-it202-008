@@ -20,6 +20,11 @@ if(!isset($data)){
                     <?php endif;?>
                 </ul>
             </div>
+            <?php if(!isset($data["user_id"])): ?>
+                <div class = "card-body">
+                    <a href = "<?php echo get_url('api/add_favorites.php?year_id=' . $data["id"]);?>" class = "card-link">Add To Favorites</a>
+                </div>
+            <?php endif ?>
             <?php if(!($tabledata === [])):?>
                 <?php render_table($tabledata); ?>
             <?php endif;?>
