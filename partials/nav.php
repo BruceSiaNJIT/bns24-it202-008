@@ -70,6 +70,7 @@ session_start();
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_year.php'); ?>">Create Years</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_years.php'); ?>">List Years</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/year_associations.php'); ?>">Year Associations</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_year.php'); ?>">Assign Years</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
