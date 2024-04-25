@@ -1,6 +1,20 @@
 <?php
 //note we need to go up 1 more directory bns24 04/14/24
 require(__DIR__ . "/../../partials/nav.php");
+$db = getDB();
+//remove all associations
+if(isset($_GET["remove"])){
+    $query = "DELETE FROM UserFavorites WHERE user_id = :user_id";
+    try{
+        $stmt = $db->prepare($query);
+        $stmt->execute([":user_id"=>get_user_id()]);
+        flash("Successfully unfavorited all years.", "success");
+    }catch(PDOException $e){
+        error_log("Error removing year associations" . var_export($e, true));
+        flash("Error removing year associations", "danger");
+    }
+    redirect("my_favorites.php");
+}
 
 //build search form bns24 04/14/24
 $form = [
@@ -12,6 +26,10 @@ $form = [
 
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
+
+$total_records = get_total_count("`Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id
+WHERE user_id = :user_id", [":user_id"=>get_user_id()]);
 
 
 //bns24 04/14/24
@@ -87,8 +105,7 @@ if(count($_GET) > 0){
     $query .= " LIMIT $limit";
 
 }
-
-$db = getDB(); //bns24 04/14/24
+ //bns24 04/14/24
 $stmt = $db->prepare($query);
 $results = [];
 try{
@@ -110,6 +127,9 @@ catch(PDOException $e){
 
 <div class = "container-fluid">
     <h3>My Favorites</h3>
+    <div>
+        <a href = "?remove" onclick = "!confirm('Are you sure you want to unfavorite all your years?')?event.preventDefault():''" class = "btn btn-danger">Remove All Favorites</a>
+    </div>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>
@@ -120,6 +140,7 @@ catch(PDOException $e){
         </div>
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href = "?clear" class = "btn btn-secondary">Clear</a>
+    <?php render_result_counts(count($results), $total_records); ?>
     <div class = "row row-cols-sm-1 row-cols-md-3 row-cols-lg-4 g-4">
         <?php foreach($results as $yr):?>  
             <?php $testarray = []; ?>
@@ -130,6 +151,11 @@ catch(PDOException $e){
                 <?php render_card($yr, $table, false); ?>
             </div>
         <?php endforeach; ?>
+        <?php if(count($results) === 0):?>
+            <div class = "col">
+                No results to show
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -7,6 +7,11 @@ if(!isset($data)){
 
 <?php if(isset($data)):?>
     <div class="card mx-auto" style="width: 18rem;">
+        <?php if(isset($data["username"])):?>
+            <div class = "card-header">
+                Favorited By: <?php se($data, "username", "N/A"); ?>
+            </div>
+        <?php endif;?>
         <div class="card-body">
             <h5 class="card-title"><?php se($data, "year", "Unknown"); ?></h5>
             <div class="card-text">
