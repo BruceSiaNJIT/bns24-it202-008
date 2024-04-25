@@ -1,9 +1,16 @@
 <?php
 //note we need to go up 1 more directory bns24 04/14/24
-require(__DIR__ . "/../../partials/nav.php");
+require(__DIR__ . "/../../../partials/nav.php");
+
+if (!has_role("Admin")) {
+    flash("You don't have permission to view this page", "warning");
+    redirect("home.php");
+}
 
 //build search form bns24 04/14/24
 $form = [
+    ["type" => "text", "name" => "username", "placeholder" => "Username", "label" => "Username", "include_margin" => false],
+
     ["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "include_margin" => false],
     ["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "include_margin" => false],
 
@@ -13,10 +20,13 @@ $form = [
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
 
-$total_records = get_total_count("Numbers");
+$total_records = get_total_count("`Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id");
+
 
 //bns24 04/14/24
-$query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
+$query = "SELECT u.username, n.id, text, year, user_id, type FROM `Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id JOIN Users u on u.id = f.user_id";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -49,6 +59,13 @@ if(count($_GET) > 0){
         if(in_array($v["name"], $keys)){
             $form[$k]["value"] = $_GET[$v["name"]];
         }
+    }
+
+    //username
+    $username = se($_GET, "username", "", false);
+    if(!empty($username)){
+        $query .= " AND u.username like :username";
+        $params[':username'] = "%$username%";
     }
 
     $yr = se($_GET, "number", "-1", false);
@@ -108,7 +125,7 @@ catch(PDOException $e){
 ?>
 
 <div class = "container-fluid">
-    <h3>Years</h3>
+    <h3>Associated Years</h3>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>
@@ -125,7 +142,7 @@ catch(PDOException $e){
             <?php $testarray = []; ?>
             <?php $testarray[0] = $yr?>
             <?php //$table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
-            <?php $table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];?>
+            <?php $table = ["data"=>$testarray, "ignored_columns" => ["user_id", "id", "text", "year", "type", "username"], "view_url"=>get_url("user_view_year.php")];?>
             <div class = "col">
                 <?php render_card($yr, $table, false); ?>
             </div>
@@ -140,5 +157,5 @@ catch(PDOException $e){
 
 <?php
 //note we need to go up 1 more directory
-require_once(__DIR__ . "/../../partials/flash.php");
+require_once(__DIR__ . "/../../../partials/flash.php");
 ?>

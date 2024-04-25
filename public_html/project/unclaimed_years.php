@@ -13,10 +13,13 @@ $form = [
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
 
-$total_records = get_total_count("Numbers");
+$total_records = get_total_count("`Numbers` n
+WHERE n.id NOT IN (SELECT year_id FROM UserFavorites)");
+
 
 //bns24 04/14/24
-$query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
+$query = "SELECT n.id, text, year, type FROM `Numbers` n
+WHERE n.id NOT IN (SELECT year_id FROM UserFavorites)";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -108,7 +111,8 @@ catch(PDOException $e){
 ?>
 
 <div class = "container-fluid">
-    <h3>Years</h3>
+    <h3>Unclaimed Years</h3>
+    <p>These years have not been favorited by anyone. Be the first!</p>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>

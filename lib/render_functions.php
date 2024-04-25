@@ -19,3 +19,8 @@ function render_card($data = array(), $tabledata = [], $includesCreate = true)
 {
     include(__DIR__ . "/../partials/card.php");
 }
+
+function render_result_counts($result_count, $total_count)
+{
+    include(__DIR__ . "/../partials/result_counts.php");
+}

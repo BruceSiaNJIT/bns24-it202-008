@@ -20,6 +20,8 @@ $form = [
 
 
 //bns24 04/14/24
+$total_records = get_total_count("Numbers");
+
 $query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -122,6 +124,8 @@ $table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["
         </div>
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href = "?clear" class = "btn btn-secondary">Clear</a>
+    </form>
+    <?php render_result_counts(count($results), $total_records); ?>
     <?php render_table($table) ?>
 </div>
 
