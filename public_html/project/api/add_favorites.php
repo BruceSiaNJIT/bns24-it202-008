@@ -9,6 +9,7 @@ if(isset($_GET["year_id"]) && is_logged_in()){
         $stmt = $db->prepare($query);
         $stmt->execute([":user_id"=>get_user_id(), ":year_id"=>$_GET["year_id"]]);
         flash("Added to Favorites", "success");
+        redirect("my_favorites.php");
     }catch(PDOException $e){
         //probably shouldn't happen cause many to many
         if($e->errorInfo[1] == 1062){
