@@ -16,6 +16,9 @@
     $_delete_url = se($data, "delete_url", "", false);
     $_delete_label = se($data, "delete_label", "Delete", false);
     $_delete_classes = se($data, "delete_classes", "btn btn-danger", false);
+    $_favorite_url = se($data, "favorite_url", "", false);
+    $_favorite_label = se($data, "favorite_label", "Favorite", false);
+    $_favorite_classes = se($data, "favorite_classes", "btn btn-warning", false);
     $_primary_key_column = se($data, "primary_key", "id", false); // used for the url generation
     //TODO persist query params (future lesson)
     //
@@ -75,6 +78,9 @@
                                 <?php endif; ?>
                                 <?php if ($_delete_url) : ?>
                                     <a href="<?php se($_delete_url); ?>?<?php se($_primary_key_column); ?>=<?php se($row, $_primary_key_column); ?>" class="<?php se($_delete_classes); ?>"><?php se($_delete_label); ?></a>
+                                <?php endif; ?>
+                                <?php if ($_favorite_url) : ?>
+                                    <a href="<?php se($_favorite_url); ?>?<?php se($_primary_key_column); ?>=<?php se($row, $_primary_key_column); ?>" class="<?php se($_favorite_classes); ?>"><?php se($_favorite_label); ?></a>
                                 <?php endif; ?>
                                 <?php if ($_post_self_form) : ?>
                                     <!-- TODO refactor -->
