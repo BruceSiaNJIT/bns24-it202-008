@@ -7,20 +7,20 @@ if (!has_role("Admin")) {
     redirect("home.php");
 }
 //attempt to apply
-if (isset($_POST["users"]) && isset($_POST["roles"])) {
+if (isset($_POST["users"]) && isset($_POST["years"])) {
     $user_ids = $_POST["users"]; //se() doesn't like arrays so we'll just do this
-    $role_ids = $_POST["roles"]; //se() doesn't like arrays so we'll just do this
-    if (empty($user_ids) || empty($role_ids)) {
+    $year_ids = $_POST["years"]; //se() doesn't like arrays so we'll just do this
+    if (empty($user_ids) || empty($year_ids)) {
         flash("Both users and roles need to be selected", "warning");
     } else {
         //for sake of simplicity, this will be a tad inefficient
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO UserRoles (user_id, role_id, is_active) VALUES (:uid, :rid, 1) 
+        $stmt = $db->prepare("INSERT INTO UserFavorites (user_id, year_id, is_active) VALUES (:uid, :yid, 1) 
         ON DUPLICATE KEY UPDATE is_active = !is_active");
         foreach ($user_ids as $uid) {
-            foreach ($role_ids as $rid) {
+            foreach ($year_ids as $yid) {
                 try {
-                    $stmt->execute([":uid" => $uid, ":rid" => $rid]);
+                    $stmt->execute([":uid" => $uid, ":yid" => $yid]);
                     flash("Updated role", "success");
                 } catch (PDOException $e) {
                     flash(var_export($e->errorInfo, true), "danger");
@@ -31,14 +31,14 @@ if (isset($_POST["users"]) && isset($_POST["roles"])) {
 }
 
 //get active roles
-$active_roles = [];
+$active_years = [];
 $db = getDB();
-$stmt = $db->prepare("SELECT id, name, description FROM Roles WHERE is_active = 1 LIMIT 10");
+$stmt = $db->prepare("SELECT id, year, text, type FROM Numbers LIMIT 100");
 try {
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if ($results) {
-        $active_roles = $results;
+        $active_years = $results;
     }
 } catch (PDOException $e) {
     flash(var_export($e->errorInfo, true), "danger");
@@ -52,8 +52,8 @@ if (isset($_POST["username"])) {
     if (!empty($username)) {
         $db = getDB();
         $stmt = $db->prepare("SELECT Users.id, username, 
-        (SELECT GROUP_CONCAT(name, ' (' , IF(ur.is_active = 1,'active','inactive') , ')') from 
-        UserRoles ur JOIN Roles on ur.role_id = Roles.id WHERE ur.user_id = Users.id) as roles
+        (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
+        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id) as years
         from Users WHERE username like :username");
         try {
             $stmt->execute([":username" => "%$username%"]);
@@ -72,7 +72,7 @@ if (isset($_POST["username"])) {
 
 ?>
 <div class="container-fluid">
-    <h1>Assign Roles</h1>
+    <h1>Assign Years</h1>
     <form method="POST">
         <?php render_input(["type" => "search", "name" => "username", "placeholder" => "Username Search", "value" => $username]);/*lazy value to check if form submitted, not ideal*/ ?>
         <?php render_button(["text" => "Search", "type" => "submit"]); ?>
@@ -84,7 +84,7 @@ if (isset($_POST["username"])) {
         <table class="table">
             <thead>
                 <th>Users</th>
-                <th>Roles to Assign</th>
+                <th>Years to Assign</th>
             </thead>
             <tbody>
                 <tr>
@@ -96,16 +96,16 @@ if (isset($_POST["username"])) {
                                         <label for="user_<?php se($user, 'id'); ?>"><?php se($user, "username"); ?></label>
                                         <input id="user_<?php se($user, 'id'); ?>" type="checkbox" name="users[]" value="<?php se($user, 'id'); ?>" />
                                     </td>
-                                    <td><?php se($user, "roles", "No Roles"); ?></td>
+                                    <td><?php se($user, "years", "No Years"); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </td>
                     <td>
-                        <?php foreach ($active_roles as $role) : ?>
+                        <?php foreach ($active_years as $year) : ?>
                             <div>
-                                <label for="role_<?php se($role, 'id'); ?>"><?php se($role, "name"); ?></label>
-                                <input id="role_<?php se($role, 'id'); ?>" type="checkbox" name="roles[]" value="<?php se($role, 'id'); ?>" />
+                                <label for="year_<?php se($year, 'id'); ?>"><?php se("ID: [") . se($year, "id") . se("] ") . se($year, "year"); ?></label>
+                                <input id="year_<?php se($year, 'id'); ?>" type="checkbox" name="years[]" value="<?php se($year, 'id'); ?>" />
                             </div>
                         <?php endforeach; ?>
                     </td>

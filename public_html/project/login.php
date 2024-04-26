@@ -119,7 +119,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
                             $_SESSION["user"]["roles"] = []; //no roles bns24 04/01/24  
                         }
                         flash("Welcome, " . get_username());
-                        die(header("Location: home.php"));
+                        redirect("home.php");
                     } else {
                         flash("Invalid password");
                     }
