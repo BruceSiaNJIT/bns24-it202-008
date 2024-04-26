@@ -41,7 +41,6 @@ if(isset($_POST["year"])){
 
     $query .= " WHERE id = :id";
     $params[":id"] = $id;
-    var_export($query);
     error_log("Query: " . $query);
     error_log("Params: ". var_export($params, true));
     try{
