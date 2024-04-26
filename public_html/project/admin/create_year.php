@@ -23,7 +23,7 @@ if(isset($_POST["action"])){
                 $quote["is_api"] = 1;
             }
             foreach($quote as $k => &$v){
-                if(!in_array($k, ["number", "text", "type", "year"])){
+                if(!in_array($k, ["number", "text", "type", "year", "is_api"])){
                     unset($quote[$k]);
                 }
                 if($k === "number"){
@@ -52,7 +52,7 @@ if(isset($_POST["action"])){
         if(!$result){
             flash("Unhandled error", "warning");
         }else{
-            flash("Created record with id " . var_export($result, true));
+            flash("Inserted Record", "success");
         }
     }catch(InvalidArgumentException $e1){
         error_log("Invalid arg" . var_export($e1, true));
