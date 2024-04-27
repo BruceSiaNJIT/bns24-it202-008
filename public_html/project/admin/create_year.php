@@ -4,33 +4,72 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
-    die(header("Location: $BASE_PATH" . "/home.php"));
+    redirect("home.php");
 }
 ?>
 
 <?php
+
 //handle year fetch bns24 04/14/24
 if(isset($_POST["action"])){
     $action = $_POST["action"];
     $year = se($_POST, "number", "", false);
+    $quote = [];
     if($year){
         if($action === "fetch"){
             $result = fetch_quote($year);
             if($result){
-                $result["is_api"] = 1;
+                $quote = $result;
+                $quote["is_api"] = 1;
+            }
+            foreach($quote as $k => &$v){
+                if(!in_array($k, ["number", "text", "type", "year"])){
+                    unset($quote[$k]);
+                }
+                if($k === "number"){
+                    $quote["year"] = $quote[$k];
+                    unset($quote[$k]);
+                }
             }
         }else if($action === "create"){
-            foreach($_POST as $k => $v){
-                if(!in_array($k, ["number", "text", "type"])){
+            foreach($_POST as $k => &$v){
+                if(!in_array($k, ["number", "text", "type", "year"])){
                     unset($_POST[$k]);
                 }
-                $result = $_POST;
+                if($k === "number"){
+                    $_POST["year"] = $_POST[$k];
+                    unset($_POST[$k]);
+                }
+                $quote = $_POST;
             }
         }
     }else{
         flash("You must provide a year", "warning");
     }
-    $db = getDB();
+
+    try{
+        $result = insert("Numbers", $quote);
+        if(!$result){
+            flash("Unhandled error", "warning");
+        }else{
+            flash("Inserted Record", "success");
+        }
+    }catch(InvalidArgumentException $e1){
+        error_log("Invalid arg" . var_export($e1, true));
+        flash("Invalid data passed", "danger");
+    }catch(PDOException $e2){
+        if($e2->errorInfo[1] == 1062){
+            flash("The info statement has already been used previously, please try another.", "warning");
+        }else{
+            error_log("Database error" . var_export($e2, true));
+            flash("Database error", "danger");
+        }
+    }catch(Exception $e3){
+        error_log("Invalid data records" . var_export($e3, true));
+        flash("Invalid data records", "danger");
+    }
+
+    /*$db = getDB();
     $query = "INSERT INTO `Numbers` ";
     $columns = [];
     $params = [];
@@ -63,7 +102,7 @@ if(isset($_POST["action"])){
             error_log("Something went wrong.");
             flash("An error occurred.", "danger");
         }
-    }
+    }*/
 }
 
 ?>

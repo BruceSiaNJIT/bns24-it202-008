@@ -1,10 +1,19 @@
 <?php
 //note we need to go up 1 more directory bns24 04/14/24
-require(__DIR__ . "/../../../partials/nav.php");
-
-if (!has_role("Admin")) {
-    flash("You don't have permission to view this page", "warning");
-    redirect("home.php");
+require(__DIR__ . "/../../partials/nav.php");
+$db = getDB();
+//remove all associations
+if(isset($_GET["remove"])){
+    $query = "DELETE FROM UserFavorites WHERE user_id = :user_id";
+    try{
+        $stmt = $db->prepare($query);
+        $stmt->execute([":user_id"=>get_user_id()]);
+        flash("Successfully unfavorited all years.", "success");
+    }catch(PDOException $e){
+        error_log("Error removing year associations" . var_export($e, true));
+        flash("Error removing year associations", "danger");
+    }
+    redirect("my_favorites.php");
 }
 
 //build search form bns24 04/14/24
@@ -18,12 +27,16 @@ $form = [
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
 
+$total_records = get_total_count("`Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id
+WHERE user_id = :user_id", [":user_id"=>get_user_id()]);
+
 
 //bns24 04/14/24
-$total_records = get_total_count("Numbers");
-
-$query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
-$params = [];
+$query = "SELECT username, n.id, text, year, user_id, type FROM `Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id LEFT JOIN Users u ON u.id = f.user_id
+WHERE user_id = :user_id";
+$params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
 $session_data = session_load($session_key);
@@ -92,8 +105,7 @@ if(count($_GET) > 0){
     $query .= " LIMIT $limit";
 
 }
-
-$db = getDB(); //bns24 04/14/24
+ //bns24 04/14/24
 $stmt = $db->prepare($query);
 $results = [];
 try{
@@ -109,11 +121,15 @@ catch(PDOException $e){
     flash("Unhandled error occurred", "danger");
 }
 
-$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "edit_url"=>get_url("admin/edit_year.php"), "delete_url"=>get_url("admin/delete_year.php"), "view_url"=>get_url("admin/view_year.php")];
+//$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "view_url"=>get_url("user_view_year.php")];
+//$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];
 ?>
 
 <div class = "container-fluid">
-    <h3>List of Years</h3>
+    <h3>My Favorites</h3>
+    <div>
+        <a href = "?remove" onclick = "!confirm('Are you sure you want to unfavorite all your years?')?event.preventDefault():''" class = "btn btn-danger">Remove All Favorites</a>
+    </div>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>
@@ -124,12 +140,26 @@ $table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["
         </div>
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href = "?clear" class = "btn btn-secondary">Clear</a>
-    </form>
     <?php render_result_counts(count($results), $total_records); ?>
-    <?php render_table($table) ?>
+    <div class = "row row-cols-sm-1 row-cols-md-3 row-cols-lg-4 g-4">
+        <?php foreach($results as $yr):?>  
+            <?php $testarray = []; ?>
+            <?php $testarray[0] = $yr?>
+            <?php //$table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
+            <?php $table = ["data"=>$testarray, "deleteyear" => ""];?>
+            <div class = "col">
+                <?php render_card($yr, $table, false); ?>
+            </div>
+        <?php endforeach; ?>
+        <?php if(count($results) === 0):?>
+            <div class = "col">
+                No results to show
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php
 //note we need to go up 1 more directory
-require_once(__DIR__ . "/../../../partials/flash.php");
+require_once(__DIR__ . "/../../partials/flash.php");
 ?>

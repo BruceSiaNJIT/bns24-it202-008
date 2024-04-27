@@ -41,6 +41,9 @@ session_start();
                 <?php if (is_logged_in()) : ?>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a></li>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
+                    <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('user_list_years.php'); ?>">See Years</a></li>
+                    <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('my_favorites.php'); ?>">My Favorites</a></li>
+                    <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('unclaimed_years.php'); ?>">Unclaimed Years</a></li>
                 <?php endif; ?>
                 <?php if (!is_logged_in()) : ?>
                     <li class="nav-item bg-light"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
@@ -49,7 +52,7 @@ session_start();
                 <?php if (has_role("Admin")) : ?>
                     <li class="nav-item dropdown bg-light">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Admin
+                            Roles
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
@@ -66,6 +69,8 @@ session_start();
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_year.php'); ?>">Create Years</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_years.php'); ?>">List Years</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/year_associations.php'); ?>">Year Associations</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_year.php'); ?>">Assign Years</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
