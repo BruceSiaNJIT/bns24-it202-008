@@ -52,7 +52,7 @@ if(isset($_POST["action"])){
         if(!$result){
             flash("Unhandled error", "warning");
         }else{
-            flash("Created record with id " . var_export($result, true));
+            flash("Inserted Record", "success");
         }
     }catch(InvalidArgumentException $e1){
         error_log("Invalid arg" . var_export($e1, true));
