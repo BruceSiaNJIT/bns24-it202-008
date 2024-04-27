@@ -9,6 +9,8 @@ if (!has_role("Admin")) {
 
 //build search form bns24 04/14/24
 $form = [
+    ["type" => "text", "name" => "username", "placeholder" => "Username", "label" => "Username", "include_margin" => false],
+
     ["type" => "number", "name" => "number", "placeholder" => "Year Number", "label" => "Year Number", "include_margin" => false],
     ["type" => "text", "name" => "text", "placeholder" => "Year Info", "label" => "Year Info", "include_margin" => false],
 
@@ -18,11 +20,13 @@ $form = [
     ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
 
+$total_records = get_total_count("`Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id");
+
 
 //bns24 04/14/24
-$total_records = get_total_count("Numbers");
-
-$query = "SELECT id, text, year, type FROM `Numbers` WHERE 1=1";
+$query = "SELECT u.username, n.id, text, year, user_id, type FROM `Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id JOIN Users u on u.id = f.user_id";
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
 $is_clear = isset($_GET["clear"]);
@@ -55,6 +59,13 @@ if(count($_GET) > 0){
         if(in_array($v["name"], $keys)){
             $form[$k]["value"] = $_GET[$v["name"]];
         }
+    }
+
+    //username
+    $username = se($_GET, "username", "", false);
+    if(!empty($username)){
+        $query .= " AND u.username like :username";
+        $params[':username'] = "%$username%";
     }
 
     $yr = se($_GET, "number", "-1", false);
@@ -109,11 +120,12 @@ catch(PDOException $e){
     flash("Unhandled error occurred", "danger");
 }
 
-$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "edit_url"=>get_url("admin/edit_year.php"), "delete_url"=>get_url("admin/delete_year.php"), "view_url"=>get_url("admin/view_year.php")];
+//$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id"], "view_url"=>get_url("user_view_year.php")];
+//$table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];
 ?>
 
 <div class = "container-fluid">
-    <h3>List of Years</h3>
+    <h3>Associated Years</h3>
     <form method = "GET">
         <div class = "row mb-3" style = "align-items: flex-end;">
             <?php foreach($form as $k=>$v) : ?>
@@ -124,9 +136,23 @@ $table = ["data"=>$results, "title" => "Your Year List", "ignored_columns" => ["
         </div>
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href = "?clear" class = "btn btn-secondary">Clear</a>
-    </form>
     <?php render_result_counts(count($results), $total_records); ?>
-    <?php render_table($table) ?>
+    <div class = "row row-cols-sm-1 row-cols-md-3 row-cols-lg-4 g-4">
+        <?php foreach($results as $yr):?>  
+            <?php $testarray = []; ?>
+            <?php $testarray[0] = $yr?>
+            <?php //$table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
+            <?php $table = ["data"=>$testarray, "deleteyear" => ""];?>
+            <div class = "col">
+                <?php render_card($yr, $table, false); ?>
+            </div>
+        <?php endforeach; ?>
+        <?php if(count($results) === 0):?>
+            <div class = "col">
+                No results to show
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php
