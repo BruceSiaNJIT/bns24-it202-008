@@ -27,7 +27,16 @@ if(!isset($data)){
             </div>
             <div class="card-body">
                 <?php if (isset($data["id"]) && $tabledata != []) : ?>
-                    <a class="btn btn-primary" href="<?php echo get_url("user_view_year.php?id=" . $data["id"]); ?>">View</a>
+                    <?php if(!isset($tabledata["adminyear"])) :?> 
+                        <a class="btn btn-primary" href="<?php echo get_url("user_view_year.php?id=" . $data["id"]); ?>">View</a>
+                    <?php endif; ?> 
+                    <?php if(isset($tabledata["deleteyear"])) : ?>
+                        <?php if (isset($data["user_id"])) : ?>
+                            <a class="btn btn-danger" href="<?php echo get_url("admin/delete_favorite.php?id=" . $data["id"] . "&user_id=" . $data["user_id"]); ?>">Unfavorite</a>
+                        <?php else: ?>
+                            <a class="btn btn-danger" href="<?php echo get_url("admin/delete_year.php?id=" . $data["id"]); ?>">Delete</a>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php if (!isset($data["user_id"]) || $data["user_id"] === "N/A") : ?>
                     <?php
