@@ -16,7 +16,8 @@ if (isset($_POST["users"]) && isset($_POST["years"])) {
         //for sake of simplicity, this will be a tad inefficient
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO UserFavorites (user_id, year_id, is_active) VALUES (:uid, :yid, 1) 
-        ON DUPLICATE KEY UPDATE is_active = !is_active");
+        ON DUPLICATE KEY UPDATE is_active = !is_active
+        ");
         foreach ($user_ids as $uid) {
             foreach ($year_ids as $yid) {
                 try {
@@ -26,6 +27,16 @@ if (isset($_POST["users"]) && isset($_POST["years"])) {
                     flash(var_export($e->errorInfo, true), "danger");
                 }
             }
+        }
+
+        //checks for duplicates then deletes them
+        $query = "DELETE FROM `UserFavorites` WHERE is_active = 0";
+        try{
+            $stmt = $db->prepare($query);
+            $stmt->execute();
+        }catch(Exception $e){
+            error_log("Error deleting stock $id" . var_export($e, true));
+            flash("Error deleting record", "danger");
         }
     }
 }
