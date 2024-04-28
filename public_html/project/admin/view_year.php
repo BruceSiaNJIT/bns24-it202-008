@@ -39,8 +39,8 @@ foreach ($yr as $key => $value) {
 
 $data = [];
 $data[0] = $yr;
-
-$table = ["data"=>$data, "edit_url"=>get_url("admin/edit_year.php"), "ignored_columns" => ["id", "year", "text", "type", "created", "modified"], "delete_url"=>get_url("admin/delete_year.php")];
+//$table = ["data"=>$data, "edit_url"=>get_url("admin/edit_year.php"), "ignored_columns" => ["id", "year", "text", "type", "created", "modified"], "delete_url"=>get_url("admin/delete_year.php")];
+$table = ["adminyear" => "adminyear", "deleteyear" => ""];
 
 //TODO handle manual create stock
 ?>
