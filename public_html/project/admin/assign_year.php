@@ -56,19 +56,20 @@ try {
 }
 
 //search for user by username
+/*
 $users = [];
 $username = "";
 if (isset($_POST["username"])) {
     $username = se($_POST, "username", "", false);
     if (!empty($username)) {
         $db = getDB();
-        $stmt = $db->prepare("SELECT Users.id, username, 
+        $stmt = $db->prepare("SELECT Users.id, username,
         (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
         UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id) as years
         from Users WHERE username like :username");
         try {
             $stmt->execute([":username" => "%$username%"]);
-            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);   
             if ($results) {
                 $users = $results;
             }
@@ -79,18 +80,77 @@ if (isset($_POST["username"])) {
         flash("Username must not be empty", "warning");
     }
 }
+*/
 
+$users = [];
+$username = "";
+$year = "";
+if (isset($_POST["username"])) {
+    $username = se($_POST, "username", "", false);
+    $year = se($_POST, "year", "", false);
+    if (!empty($username)) {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT Users.id, username,
+        (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
+        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year) as years
+        from Users WHERE username like :username");
+        try {
+            $stmt->execute([":username" => "%$username%", ":year" => "%$year%"]);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);   
+            if ($results) {
+                $users = $results;
+            }
+            foreach($users as $key => &$testarray){
+                foreach($testarray as $k=>$v){
+                    if($k === "years" && is_null($v)){
+                        unset($users[$key]);
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            flash(var_export($e->errorInfo, true), "danger");
+        }
+    }elseif (!empty($year)){
+        $db = getDB();
+        $stmt = $db->prepare("SELECT Users.id, username,
+        (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
+        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year) as years
+        from Users");
+        try {
+            $stmt->execute([":year" => "%$year%"]);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);   
+            if ($results) {
+                $users = $results;
+            }
+            foreach($users as $key => &$testarray){
+                foreach($testarray as $k=>$v){
+                    if($k === "years" && is_null($v)){
+                        unset($users[$key]);
+                    }
+                }
+            }
+        } catch (PDOException $e) {
+            flash(var_export($e->errorInfo, true), "danger");
+        }
+    } else {
+        flash("Username and Year must not both be empty", "warning");
+    }
+}
 
 ?>
 <div class="container-fluid">
     <h1>Assign Years</h1>
     <form method="POST">
         <?php render_input(["type" => "search", "name" => "username", "placeholder" => "Username Search", "value" => $username]);/*lazy value to check if form submitted, not ideal*/ ?>
+        <?php render_input(["type" => "search", "name" => "year", "placeholder" => "Year Search", "value" => $year]);/*lazy value to check if form submitted, not ideal*/ ?>
         <?php render_button(["text" => "Search", "type" => "submit"]); ?>
     </form>
     <form method="POST">
         <?php if (isset($username) && !empty($username)) : ?>
             <input type="hidden" name="username" value="<?php se($username, false); ?>" />
+        <?php endif; ?>
+        <?php if (isset($year) && !empty($year)) : ?>
+            <input type="hidden" name="year" value="<?php se($year, false); ?>" />
         <?php endif; ?>
         <table class="table">
             <thead>
