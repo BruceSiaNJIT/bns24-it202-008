@@ -85,6 +85,7 @@ if (isset($_POST["username"])) {
 $users = [];
 $username = "";
 $year = "";
+//bns24 04/27/24
 if (isset($_POST["username"])) {
     $username = se($_POST, "username", "", false);
     $year = se($_POST, "year", "", false);
@@ -92,8 +93,8 @@ if (isset($_POST["username"])) {
         $db = getDB();
         $stmt = $db->prepare("SELECT Users.id, username,
         (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
-        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year) as years
-        from Users WHERE username like :username");
+        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year LIMIT 25) as years
+        from Users WHERE username like :username LIMIT 25");
         try {
             $stmt->execute([":username" => "%$username%", ":year" => "%$year%"]);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);   
@@ -114,8 +115,8 @@ if (isset($_POST["username"])) {
         $db = getDB();
         $stmt = $db->prepare("SELECT Users.id, username,
         (SELECT GROUP_CONCAT(' ID: [', Numbers.id, '] ', year, ' ') from 
-        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year) as years
-        from Users");
+        UserFavorites uf JOIN Numbers on uf.year_id = Numbers.id WHERE uf.user_id = Users.id AND Numbers.year like :year LIMIT 25) as years
+        from Users LIMIT 25");
         try {
             $stmt->execute([":year" => "%$year%"]);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);   
