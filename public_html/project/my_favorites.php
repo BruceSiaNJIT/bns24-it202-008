@@ -33,8 +33,8 @@ WHERE user_id = :user_id", [":user_id"=>get_user_id()]);
 
 
 //bns24 04/14/24
-$query = "SELECT n.id, text, year, user_id, type FROM `Numbers` n
-JOIN `UserFavorites` f ON n.id = f.year_id
+$query = "SELECT username, n.id, text, year, user_id, type FROM `Numbers` n
+JOIN `UserFavorites` f ON n.id = f.year_id LEFT JOIN Users u ON u.id = f.user_id
 WHERE user_id = :user_id";
 $params = [":user_id" => get_user_id()];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -146,7 +146,7 @@ catch(PDOException $e){
             <?php $testarray = []; ?>
             <?php $testarray[0] = $yr?>
             <?php //$table = ["data"=>$testarray, "ignored_columns" => ["id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php"), "favorite_url"=>get_url("favorite_years.php")];?>
-            <?php $table = ["data"=>$testarray, "ignored_columns" => ["user_id", "id", "text", "year", "type"], "view_url"=>get_url("user_view_year.php")];?>
+            <?php $table = ["data"=>$testarray, "deleteyear" => ""];?>
             <div class = "col">
                 <?php render_card($yr, $table, false); ?>
             </div>

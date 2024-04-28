@@ -35,6 +35,7 @@ foreach ($yr as $key => $value) {
 $data = [];
 $data[0] = $yr;
 
+//$table = ["data"=>$data, "viewyear" => ""];
 $table = [];
 
 //TODO handle manual create stock

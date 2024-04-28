@@ -9,7 +9,7 @@ if(!isset($data)){
     <div class="card mx-auto" style="width: 18rem;">
         <?php if(isset($data["username"])):?>
             <div class = "card-header">
-                Favorited By: <?php se($data, "username", "N/A"); ?>
+                Favorited By: <a href="<?php echo get_url("profile.php?id=" . $data["user_id"]); ?>"><?php se($data, "username", "N/A"); ?></a>
             </div>
         <?php endif;?>
         <div class="card-body">
@@ -25,14 +25,28 @@ if(!isset($data)){
                     <?php endif;?>
                 </ul>
             </div>
-            <?php if(!isset($data["user_id"])): ?>
-                <div class = "card-body">
-                    <a href = "<?php echo get_url('api/add_favorites.php?year_id=' . $data["id"]);?>" class = "card-link">Add To Favorites</a>
-                </div>
-            <?php endif ?>
-            <?php if(!($tabledata === [])):?>
-                <?php render_table($tabledata); ?>
-            <?php endif;?>
+            <div class="card-body">
+                <?php if (isset($data["id"]) && $tabledata != []) : ?>
+                    <?php if(!isset($tabledata["adminyear"])) :?> 
+                        <a class="btn btn-primary" href="<?php echo get_url("user_view_year.php?id=" . $data["id"]); ?>">View</a>
+                    <?php endif; ?> 
+                    <?php if(isset($tabledata["deleteyear"])) : ?>
+                        <?php if (isset($data["user_id"])) : ?>
+                            <a class="btn btn-danger" href="<?php echo get_url("admin/delete_favorite.php?id=" . $data["id"] . "&user_id=" . $data["user_id"]); ?>">Unfavorite</a>
+                        <?php else: ?>
+                            <a class="btn btn-danger" href="<?php echo get_url("admin/delete_year.php?id=" . $data["id"]); ?>">Delete</a>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if (!isset($data["user_id"]) || $data["user_id"] === "N/A") : ?>
+                    <?php
+                    $id = isset($data["id"]) ? $data["id"] : (isset($_GET["id"]) ? $_GET["id"] : -1);
+                    ?>
+                    <?php if($tabledata != []) :?>
+                        <a href = "<?php echo get_url('api/add_favorites.php?year_id=' . $data["id"]);?>" class = "card-link">Add To Favorites</a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 <?php endif;?>
